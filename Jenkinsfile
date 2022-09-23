@@ -1,28 +1,74 @@
 pipeline {
-    agent any
+    agent {
+        docker {
+            image 'gradle:7.5.1-jdk17-alpine'
+        }
+    }
     stages {
+        stage('Classes') {
+            steps {
+                sh 'gradle classes'
+            }
+        }
+        stage('TestClasses') {
+            steps {
+                sh 'gradle testClasses'
+            }
+        }
+        stage('JAR') {
+            steps {
+                sh 'gradle jar'
+            }
+        }
         stage('Test') {
             steps {
-                sh 'echo "success"'
+                sh 'gradle test'
+            }
+        }
+        stage('Check') {
+            steps {
+                sh 'gradle check'
+            }
+        }
+        stage('Assemble') {
+            steps {
+                sh 'gradle assemble'
+            }
+        }
+        stage('Build') {
+            steps {
+                sh 'gradle build'
+            }
+        }
+        stage('Deploy') {
+            steps {
+                timeout(time: 3, unit: 'MINUTES') {
+                    retry(5) {
+                        sh 'gradle run'
+                    }
+                }
+
+                timeout(time: 3, unit: 'MINUTES') {
+                    sh 'execute health-check.sh'
+                }
             }
         }
     }
     post {
         always {
-            echo 'This will always run'
+            echo 'Find status below:'
         }
         success {
-            echo 'This will run only if successful'
+            echo 'Completed Successfully'
         }
         failure {
-            echo 'This will run only if failed'
+            echo 'Failed'
         }
         unstable {
-            echo 'This will run only if the run was marked as unstable'
+            echo 'Unstable'
         }
         changed {
-            echo 'This will run only if the state of the Pipeline has changed'
-            echo 'For example, if the Pipeline was previously failing but is now successful'
+            echo 'state of the Pipeline has changed'
         }
     }
 }
