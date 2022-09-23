@@ -1,50 +1,46 @@
 pipeline {
-    agent {
-        docker {
-            image 'gradle:7.5.1-jdk17-alpine'
-        }
-    }
+    agent any
     stages {
         stage('Classes') {
             steps {
-                sh 'gradle classes'
+                sh './gradlew classes'
             }
         }
         stage('TestClasses') {
             steps {
-                sh 'gradle testClasses'
+                sh './gradlew testClasses'
             }
         }
         stage('JAR') {
             steps {
-                sh 'gradle jar'
+                sh './gradlew jar'
             }
         }
         stage('Test') {
             steps {
-                sh 'gradle test'
+                sh './gradlew test'
             }
         }
         stage('Check') {
             steps {
-                sh 'gradle check'
+                sh './gradlew check'
             }
         }
         stage('Assemble') {
             steps {
-                sh 'gradle assemble'
+                sh './gradlew assemble'
             }
         }
         stage('Build') {
             steps {
-                sh 'gradle build'
+                sh './gradlew build'
             }
         }
         stage('Deploy') {
             steps {
                 timeout(time: 3, unit: 'MINUTES') {
                     retry(5) {
-                        sh 'gradle run'
+                        sh './gradlew run'
                     }
                 }
 
