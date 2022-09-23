@@ -54,12 +54,20 @@ pipeline {
         always {
             archiveArtifacts artifacts: 'build/libs/**/*.jar', fingerprint: true
             junit 'build/test-results/**/*.xml'
+            deleteDir()
         }
         success {
             echo 'Completed Successfully'
+            slackSend channel: '#ops-room',
+                        color: 'good',
+                        message: "The pipeline ${currentBuild.fullDisplayName} completed successfully."
         }
         failure {
             echo 'Failed'
+            mail to: 'eng.ahmadshalabi@gmail.com',
+                subject: "Failed Pipeline: ${currentBuild.fullDisplayName}",
+                body: "Something is wrong with ${env.BUILD_URL}"
+
         }
         unstable {
             echo 'Unstable'
