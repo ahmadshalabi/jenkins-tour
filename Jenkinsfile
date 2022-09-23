@@ -1,5 +1,8 @@
 pipeline {
     agent any
+    options {
+        skipStagesAfterUnstable()
+    }
     stages {
         stage('Classes') {
             steps {
@@ -36,10 +39,31 @@ pipeline {
                 sh './gradlew build'
             }
         }
-        stage('Deploy') {
+        stage('Deploy - Staging') {
             steps {
                 timeout(time: 3, unit: 'MINUTES') {
                     retry(5) {
+                        echo './deploy staging'
+                        sh './gradlew run'
+                        echo './run-smoke-tests'
+                    }
+                }
+
+                timeout(time: 3, unit: 'MINUTES') {
+                    echo 'execute health-check.sh'
+                }
+            }
+        }
+        stages('Sanity check') {
+            steps {
+                input "Does the staging enviroment look ok?"
+            }
+        }
+        stage('Deploy - Production') {
+            steps {
+                timeout(time: 3, unit: 'MINUTES') {
+                    retry(5) {
+                        echo './deploy production'
                         sh './gradlew run'
                     }
                 }
