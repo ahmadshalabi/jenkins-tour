@@ -47,6 +47,8 @@ pipeline {
                 timeout(time: 3, unit: 'MINUTES') {
                     echo 'execute health-check.sh'
                 }
+
+                sh 'exit 1;'
             }
         }
     }
