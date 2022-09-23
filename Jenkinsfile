@@ -14,6 +14,23 @@ pipeline {
                 sh './gradlew testClasses'
             }
         }
+        stage('Qodana') {
+            agent {
+                docker {
+                    args '''
+                        -v /opt/qodana/reports:/data/reports
+                        -v /opt/qodana/cache:/data/cache
+                        -v /opt/qodana/results:/data/results
+                        -v /opt/qodana/qodana.sarif.json:/data/qodana.sarif.json
+                        --entrypoint=""
+                    '''
+                    image 'jetbrains/qodana-jvm'
+                }
+            }
+            steps {
+                sh "qodana --save-report"
+            }
+        }
         stage('JAR') {
             steps {
                 sh './gradlew jar'
