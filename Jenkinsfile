@@ -52,7 +52,8 @@ pipeline {
     }
     post {
         always {
-            echo 'Find status below:'
+            archiveArtifacts artifacts: 'build/libs/**/*.jar', fingerprint: true
+            junit 'build/test-results/**/*.xml'
         }
         success {
             echo 'Completed Successfully'
