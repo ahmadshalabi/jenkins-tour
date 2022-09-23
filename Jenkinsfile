@@ -49,7 +49,7 @@ pipeline {
                 }
 
                 timeout(time: 3, unit: 'MINUTES') {
-                    sh 'execute health-check.sh'
+                    echo 'execute health-check.sh'
                 }
             }
         }
