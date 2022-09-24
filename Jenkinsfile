@@ -40,7 +40,7 @@ pipeline {
             }
         }
         stage('Qodana') {
-            steps {
+            stages {
                 stage('Preparations') {
                     steps {
                         sh 'mkdir -p qodana-reports/'
@@ -50,8 +50,8 @@ pipeline {
                 stage('Run') {
                     agent {
                         docker {
-                            args "--entrypoint='' -v ${env.WORKSPACE}/qodana-reports:/data/results/ -v ${env.WORKSPACE}:/data/project/"
                             image 'jetbrains/qodana-jvm'
+                            args "--entrypoint='' -v ${env.WORKSPACE}/qodana-reports:/data/results/ -v ${env.WORKSPACE}:/data/project/"
                         }
                     }
                     steps {
