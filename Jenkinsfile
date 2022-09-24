@@ -43,8 +43,13 @@ pipeline {
             agent {
                 docker {
                     image 'jetbrains/qodana-jvm'
-                    args "--entrypoint=''"
-                    reuseNode true
+                    args '''
+                        -v /opt/qodana/reports:/data/reports
+                        -v /opt/qodana/cache:/data/cache
+                        -v /opt/qodana/results:/data/results
+                        -v /opt/qodana/qodana.sarif.json:/data/qodana.sarif.json
+                        --entrypoint=""
+                    '''
                 }
             }
             steps {
