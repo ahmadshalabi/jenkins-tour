@@ -44,6 +44,7 @@ pipeline {
                 docker {
                     image 'jetbrains/qodana-jvm'
                     args "--entrypoint=''"
+                    reuseNode true
                 }
             }
             steps {
