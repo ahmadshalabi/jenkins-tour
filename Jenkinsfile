@@ -43,10 +43,10 @@ pipeline {
             agent {
                 docker {
                     args '''
-                        -v /opt/qodana/reports:/data/reports
-                        -v /opt/qodana/cache:/data/cache
-                        -v /opt/qodana/results:/data/results
-                        -v /opt/qodana/qodana.sarif.json:/data/qodana.sarif.json
+                        -v ${env.WORKSPACE}/reports:/data/reports
+                        -v ${env.WORKSPACE}/cache:/data/cache
+                        -v ${env.WORKSPACE}/results:/data/results
+                        -v ${env.WORKSPACE}/qodana.sarif.json:/data/qodana.sarif.json
                         --entrypoint=""
                     '''
                     image 'jetbrains/qodana-jvm'
