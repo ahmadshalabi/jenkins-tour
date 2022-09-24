@@ -40,16 +40,14 @@ pipeline {
             }
         }
         stage('Qodana') {
+            agent {
+                docker {
+                    image 'jetbrains/qodana-jvm'
+                    args "--entrypoint=''"
+                }
+            }
             steps {
-                agent {
-                    docker {
-                        image 'jetbrains/qodana-jvm'
-                        args "--entrypoint=''"
-                    }
-                }
-                steps {
-                    sh "qodana --save-report"
-                }
+                sh "qodana --save-report"
             }
         }
         stage('Deploy - Staging') {
