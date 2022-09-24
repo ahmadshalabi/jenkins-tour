@@ -40,23 +40,15 @@ pipeline {
             }
         }
         stage('Qodana') {
-            stages {
-                stage('Preparations') {
-                    steps {
-                        sh 'mkdir -p qodana-reports/'
-                        sh 'chown jenkins:jenkins qodana-reports'
+            steps {
+                agent {
+                    docker {
+                        image 'jetbrains/qodana-jvm'
+                        args "--entrypoint=''"
                     }
                 }
-                stage('Run') {
-                    agent {
-                        docker {
-                            image 'jetbrains/qodana-jvm'
-                            args "--entrypoint='' -v ${env.WORKSPACE}/qodana-reports:/data/results/"
-                        }
-                    }
-                    steps {
-                        sh "qodana --save-report"
-                    }
+                steps {
+                    sh "qodana --save-report"
                 }
             }
         }
@@ -77,7 +69,7 @@ pipeline {
         }
         stage('Sanity check') {
             steps {
-                input "Does the staging enviroment look ok?"
+                input "Does the staging environment look ok?"
             }
         }
         stage('Deploy - Production') {
@@ -99,7 +91,7 @@ pipeline {
         always {
             archiveArtifacts artifacts: 'build/libs/**/*.jar', fingerprint: true
             junit 'build/test-results/**/*.xml'
-            deleteDir()
+//             deleteDir()
         }
         success {
             echo 'Completed Successfully'
