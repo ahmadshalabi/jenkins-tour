@@ -40,14 +40,24 @@ pipeline {
             }
         }
         stage('Qodana') {
-            agent {
-                docker {
-                    args "-v ${env.WORKSPACE}/reports:/data/reports -v ${env.WORKSPACE}/cache:/data/cache -v ${env.WORKSPACE}/results:/data/results -v ${env.WORKSPACE}/qodana.sarif.json:/data/qodana.sarif.json --entrypoint=''"
-                    image 'jetbrains/qodana-jvm'
-                }
-            }
             steps {
-                sh "qodana --save-report"
+                stage('Preparations') {
+                    steps {
+                        sh 'mkdir -p qodana-reports/'
+                        sh 'chown jenkins:jenkins qodana-reports'
+                    }
+                }
+                stage('Run') {
+                    agent {
+                        docker {
+                            args "--entrypoint='' -v ${env.WORKSPACE}/qodana-reports:/data/results/ -v ${env.WORKSPACE}:/data/project/"
+                            image 'jetbrains/qodana-jvm'
+                        }
+                    }
+                    steps {
+                        sh "qodana --save-report"
+                    }
+                }
             }
         }
         stage('Deploy - Staging') {
