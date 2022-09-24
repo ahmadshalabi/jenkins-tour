@@ -42,12 +42,7 @@ pipeline {
         stage('Qodana') {
             agent {
                 docker {
-                    args "
-                        -v ${env.WORKSPACE}/reports:/data/reports
-                        -v ${env.WORKSPACE}/cache:/data/cache
-                        -v ${env.WORKSPACE}/results:/data/results
-                        -v ${env.WORKSPACE}/qodana.sarif.json:/data/qodana.sarif.json
-                        --entrypoint=''"
+                    args "-v ${env.WORKSPACE}/reports:/data/reports -v ${env.WORKSPACE}/cache:/data/cache -v ${env.WORKSPACE}/results:/data/results -v ${env.WORKSPACE}/qodana.sarif.json:/data/qodana.sarif.json --entrypoint=''"
                     image 'jetbrains/qodana-jvm'
                 }
             }
