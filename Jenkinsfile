@@ -58,11 +58,13 @@ pipeline {
                         docker {
                             image 'jetbrains/qodana-jvm'
                             reuseNode true
-                            args "-v ${env.WORKSPACE}/qodana-report:/data/results/report -v ${env.JENKINS_HOME}/qodana/cache:/data/cache --entrypoint=''"
+                            args "-v ${env.WORKSPACE}/qodana-report:/data/results/report"
+                            args "-v ${env.JENKINS_HOME}/qodana/cache:/data/cache"
+                            args "--entrypoint=''"
                         }
                     }
                     steps {
-                        sh "qodana --save-report"
+                        sh "qodana --save-report --baseline qodana.sarif.json"
                     }
                 }
                 stage('Reports') {
