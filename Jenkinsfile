@@ -51,6 +51,7 @@ pipeline {
                     agent {
                         docker {
                             image 'jetbrains/qodana-jvm'
+                            reuseNode true
                             args "-v ${env.JENKINS_HOME}/qodana/reports:/data/reports -v ${env.JENKINS_HOME}/qodana/cache:/data/cache -v ${env.JENKINS_HOME}/qodana/results:/data/results -v ${env.JENKINS_HOME}/qodana/qodana.sarif.json:/data/qodana.sarif.json --entrypoint=''"
                         }
                     }
@@ -99,7 +100,7 @@ pipeline {
         always {
             archiveArtifacts artifacts: 'build/libs/**/*.jar', fingerprint: true
             junit 'build/test-results/**/*.xml'
-//             deleteDir()
+            deleteDir()
         }
         success {
             echo 'Completed Successfully'
