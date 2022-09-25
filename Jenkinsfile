@@ -45,8 +45,10 @@ pipeline {
                     steps {
                         sh "mkdir -p ${env.JENKINS_HOME}/qodana/cache/"
                         sh "chown jenkins:jenkins -R ${env.JENKINS_HOME}/qodana"
-                        sh "mkdir -p ${env.WORKSPACE}/qodana-report/"
-                        sh "chown jenkins:jenkins ${env.WORKSPACE}/qodana-report"
+
+                        sh "mkdir qodana-report"
+                        sh "chown jenkins:jenkins qodana-report"
+
                         sh "mkdir -p ${env.JENKINS_HOME}/qodana-report"
                         sh "chown jenkins:jenkins ${env.JENKINS_HOME}/qodana-report"
                     }
@@ -65,9 +67,9 @@ pipeline {
                 }
                 stage('Reports') {
                     steps {
-                        sh "cp -r ${env.WORKSPACE}/qodana-report/* ${env.JENKINS_HOME}/qodana-report/"
+                        sh "cp -r qodana-report/* ${env.JENKINS_HOME}/qodana-report/"
                         sh "echo '<html><head><meta http-equiv=\"refresh\" content=\"0; url=https://localhost:8000\" /></head></html>' > qodana-reports/qodana.html"
-                        archiveArtifacts artifacts: "qodana-report/index.html", fingerprint: true
+                        archiveArtifacts artifacts: "qodana-report/qodana.html", fingerprint: true
                     }
                 }
             }
