@@ -45,6 +45,8 @@ pipeline {
                     steps {
                         sh "mkdir -p ${env.JENKINS_HOME}/qodana/cache/"
                         sh "chown jenkins:jenkins -R ${env.JENKINS_HOME}/qodana"
+                        sh "mkdir -p ${env.WORKSPACE}/qodana-report/"
+                        sh "chown jenkins:jenkins ${env.WORKSPACE}/qodana-report"
                     }
                 }
                 stage('Run') {
@@ -52,11 +54,19 @@ pipeline {
                         docker {
                             image 'jetbrains/qodana-jvm'
                             reuseNode true
-                            args "-v ${env.JENKINS_HOME}/war/qodana/report:/data/results/report -v ${env.JENKINS_HOME}/qodana/cache:/data/cache --entrypoint=''"
+                            args "-v ${env.WORKSPACE}/qodana-report:/data/results/report -v ${env.JENKINS_HOME}/qodana/cache:/data/cache --entrypoint=''"
                         }
                     }
                     steps {
                         sh "qodana --save-report"
+                    }
+                }
+                stage('Reports') {
+                    steps {
+                        sh "mkdir -p ${env.JENKINS_HOME}/war/qodana-report"
+                        sh "cp -r ${env.WORKSPACE}/qodana-report/* ${env.JENKINS_HOME}/war/qodana-report/"
+                        // make a html-file we can archive in jenkins, that will redirect to our vhost that hosts the above folder
+                        archiveArtifacts artifacts: "${env.JENKINS_HOME}/war/qodana-report/index.html", fingerprint: true
                     }
                 }
             }
