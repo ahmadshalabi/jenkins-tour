@@ -41,12 +41,12 @@ pipeline {
         }
         stage('Qodana') {
             stages {
-//                 stage('Preparations') {
-//                     steps {
-//                         sh "mkdir -p ${env.JENKINS_HOME}/qodana/"
-//                         sh "chown jenkins:jenkins ${env.JENKINS_HOME}/qodana"
-//                     }
-//                 }
+                stage('Preparations') {
+                    steps {
+                        sh "mkdir -p ${env.JENKINS_HOME}/qodana/cache/"
+                        sh "chown jenkins:jenkins -R ${env.JENKINS_HOME}/qodana"
+                    }
+                }
                 stage('Run') {
                     agent {
                         docker {
