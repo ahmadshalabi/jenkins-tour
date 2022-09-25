@@ -41,18 +41,18 @@ pipeline {
         }
         stage('Qodana') {
             stages {
-                stage('Preparations') {
-                    steps {
-                        sh "mkdir -p ${env.JENKINS_HOME}/qodana/"
-                        sh "chown jenkins:jenkins ${env.JENKINS_HOME}/qodana"
-                    }
-                }
+//                 stage('Preparations') {
+//                     steps {
+//                         sh "mkdir -p ${env.JENKINS_HOME}/qodana/"
+//                         sh "chown jenkins:jenkins ${env.JENKINS_HOME}/qodana"
+//                     }
+//                 }
                 stage('Run') {
                     agent {
                         docker {
                             image 'jetbrains/qodana-jvm'
                             reuseNode true
-                            args "-v ${env.JENKINS_HOME}/qodana/reports:/data/reports -v ${env.JENKINS_HOME}/qodana/cache:/data/cache -v ${env.JENKINS_HOME}/qodana/results:/data/results -v ${env.JENKINS_HOME}/qodana/qodana.sarif.json:/data/qodana.sarif.json --entrypoint=''"
+                            args "-v ${env.JENKINS_HOME}/war/qodana/report:/data/results/report -v ${env.JENKINS_HOME}/qodana/cache:/data/cache --entrypoint=''"
                         }
                     }
                     steps {
