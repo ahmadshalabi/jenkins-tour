@@ -68,7 +68,7 @@ pipeline {
                 stage('Reports') {
                     steps {
                         sh "cp -r qodana-report/* ${env.JENKINS_HOME}/qodana-report/"
-                        sh "echo '<html><head><meta http-equiv=\"refresh\" content=\"0; url=https://localhost:8000\" /></head></html>' > qodana-reports/qodana.html"
+                        sh "echo '<html><head><meta http-equiv=\"refresh\" content=\"0; url=https://localhost:8000\" /></head></html>' > qodana-report/qodana.html"
                         archiveArtifacts artifacts: "qodana-report/qodana.html", fingerprint: true
                     }
                 }
