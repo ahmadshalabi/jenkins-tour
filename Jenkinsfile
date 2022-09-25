@@ -66,7 +66,7 @@ pipeline {
                         sh "mkdir -p ${env.JENKINS_HOME}/war/qodana-report"
                         sh "cp -r ${env.WORKSPACE}/qodana-report/* ${env.JENKINS_HOME}/war/qodana-report/"
                         // make a html-file we can archive in jenkins, that will redirect to our vhost that hosts the above folder
-                        archiveArtifacts artifacts: "${env.JENKINS_HOME}/war/qodana-report/index.html", fingerprint: true
+                        archiveArtifacts artifacts: "qodana-report/index.html", fingerprint: true
                     }
                 }
             }
