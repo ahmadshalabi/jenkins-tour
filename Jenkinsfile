@@ -63,9 +63,9 @@ pipeline {
                 }
                 stage('Reports') {
                     steps {
-                        sh "mkdir -p ${env.JENKINS_HOME}/war/qodana-report"
-                        sh "cp -r ${env.WORKSPACE}/qodana-report/* ${env.JENKINS_HOME}/war/qodana-report/"
-                        // make a html-file we can archive in jenkins, that will redirect to our vhost that hosts the above folder
+                        sh "mkdir -p ${env.JENKINS_HOME}/qodana-report"
+                        sh "cp -r ${env.WORKSPACE}/qodana-report/* ${env.JENKINS_HOME}/qodana-report/"
+                        sh "echo '<html><head><meta http-equiv=\"refresh\" content=\"0; url=https://localhost:8000\" /></head></html>' > qodana-reports/qodana.html"
                         archiveArtifacts artifacts: "qodana-report/index.html", fingerprint: true
                     }
                 }
